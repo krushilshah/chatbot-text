@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ProviderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\translateController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/dashboard', function () {
@@ -25,8 +26,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::get('/auth/{provider}/redirect', [ProviderController::class , 'redirect']); 
-Route::get('/auth/{provider}/callback', [ProviderController::class , 'callback']); 
+Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
+Route::get('/auth/{provider}/callback', [ProviderController::class, 'callback']);
 
 // Route::get('/auth/{provider}/callback', [GoogleController::class , 'getImages']); 
 Route::get('/google', [GoogleController::class, 'getImages'])->name('google.photos');
@@ -36,6 +37,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Translate Api 
+    Route::get('/language', [translateController::class, 'selectLanguage'])->name('selectLanguage');
+    Route::post('/store/language', [translateController::class, 'storeLanguage'])->name('storeLanguage');
+    Route::get('/translate', [translateController::class, 'translate'])->name('translate');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

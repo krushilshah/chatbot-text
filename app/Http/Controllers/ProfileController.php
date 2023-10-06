@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\language;
+
 
 class ProfileController extends Controller
 {
@@ -16,8 +18,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        $languages = language::all(); 
+
+         return view('profile.edit', [
             'user' => $request->user(),
+            'language' => $request->user(),
+            'username' => $request->user(),
+            'languages' => $languages,
         ]);
     }
 
@@ -26,6 +33,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        // dd($request->all());
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {

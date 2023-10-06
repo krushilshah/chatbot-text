@@ -14,7 +14,7 @@
             Sign in with Google
         </a>
     </div>
-    <form method="POST" action="{{ route('login') }}">
+    {{-- <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email Address -->
@@ -57,5 +57,5 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
-    </form>
+    </form> --}}
 </x-guest-layout>

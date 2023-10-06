@@ -22,7 +22,25 @@
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
-
+        <div>
+            <x-input-label for="username" :value="__('username')" />
+            <x-text-input id="username" name="username" type="text" class="mt-1 block w-full" :value="old('username', $user->username)" required autofocus autocomplete="username" />
+            <x-input-error class="mt-2" :messages="$errors->get('username')" />
+        </div>
+        
+        <!-- Select Languages -->
+        <div>
+            <x-input-label class="mt-5"  for="language" :value="__('language')" />
+            <select id="language" class="block mt-1 w-full @error('language') is-invalid @enderror" name="language" autofocus autocomplete="language">
+                {{-- <option disabled>{{$user->language}}</option> --}}
+                @foreach ($languages as $language)
+                <option {{ $language->id == $user->language ? 'selected' : '' }} value="{{$language->id}}">{{$language->name}}</option>
+                @endforeach
+            </select>
+            @if ($errors->has('language'))
+             <div class="text-danger">{{ $errors->first('language') }}</div>
+             @endif
+        </div>
         <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
