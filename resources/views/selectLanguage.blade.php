@@ -54,8 +54,7 @@
             @csrf
             <div class=" userNameContainer">
                 {{-- <input class="userInput" placeholder="Enter Your Unique Username Here" type="text"> --}}
-                <input type="text" id="username" class="form-control userInput" name="username"
-                    :value="old('username')" autofocus placeholder="Enter Your Unique Username Here">
+                <input type="text" id="username" class="form-control userInput" name="username" value="{{old('username')}}" autofocus placeholder="Enter Your Unique Username Here">
             </div>
             @if ($errors->has('username'))
                 <div style="color: red; margin-left:25px;margin-top:10px;" class="text-danger  ">{{ $errors->first('username') }}</div>

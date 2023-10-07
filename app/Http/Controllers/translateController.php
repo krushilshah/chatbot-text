@@ -11,6 +11,12 @@ use Auth;
 
 class translateController extends Controller
 {
+    public function dashboard()
+    {
+        $users = User::whereNotIn('id', [Auth::user()->id])->get();
+        return view('dashboard',['users'=>$users]);
+    }
+
     public function selectLanguage()
     {
         $languages = language::all(); 
@@ -34,12 +40,22 @@ class translateController extends Controller
     
     public function translate(Request $request)
     {
-        $textToTranslate = 'Hey I am Vikas. I am from India to be specific Gujarat. I found you through TalktoSync. I am trying out this app which aims to minimize the language barrier on messages. I found this app is really amazing as it actually works and It has eliminated the two to three steps of copying the message and translating it and then responding it and vice versa. I really love the idea and working of this app';
+        $textToTranslate = 'Mujhe sex karna hai';
 
         $translate = new GoogleTranslate();
-        $translatedText = $translate->setSource('hi')->setTarget('en')->translate($textToTranslate);
+        $translatedText = $translate->setSource('hi')->setTarget('ur')->translate($textToTranslate);
         dd($translatedText);
 
         return response()->json(['message' => $translatedText]);
+    }
+
+    // 
+    public function getUserData(Request $request)
+    {
+
+        $user = User::find($request->user_id);
+        $messages = message::orWhere('sender_id',Auth::user()->id)->orWhere('sender_id',$request->user_id)->orWhere('reciver_id',Auth::user()->id)->orWhere('reciver_id',$request->user_id)->get();
+        return response()->json(['user'=>$user,'messages'=>$messages]);
+
     }
 }

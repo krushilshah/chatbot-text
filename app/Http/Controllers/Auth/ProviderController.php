@@ -19,21 +19,31 @@ class ProviderController extends Controller
     public function callback($provider)
     {
         $socialUser = Socialite::driver($provider)->user();
-        // dd($socialUser);
-        $user = User::updateOrCreate([
-            'provider_id' => $socialUser->id,
-            'provider' => $provider,
-        ], [
-            'name' => $socialUser->name,
-            'email' => $socialUser->email,
-            'username' => $socialUser->nickname,
-            'provider_token' => $socialUser->token,
+        $isVerify = User::where('email',$socialUser->email)->first();
+        if ($isVerify) { 
+            Auth::login($isVerify);
+            return redirect('/dashboard');
+        }else{
+            $user = User::updateOrCreate([
+                'provider_id' => $socialUser->id,
+                'provider' => $provider,
+    
+            ], [
+                'name' => $socialUser->name,
+                'email' => $socialUser->email,
+                'username' => $socialUser->nickname,
+                'provider_token' => $socialUser->token,
+                'image' => $socialUser->avatar_original,
+    
+            ]);
+            $updateImage = User::find($user->id);
+            $updateImage->image = $socialUser->avatar_original;
+            $updateImage->save();
+    
+            Auth::login($user);
+            return redirect('/language');
+        }
 
-        ]);
-
-        Auth::login($user);
-
-        return redirect('/language');
     }
    
 

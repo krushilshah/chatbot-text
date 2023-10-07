@@ -20,10 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
+Route::middleware(['auth', 'verified'])->group(function () {
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/dashboard', [translateController::class, 'dashboard'])->name('dashboard');
+
+});
+
 
 
 Route::get('/auth/{provider}/redirect', [ProviderController::class, 'redirect']);
@@ -41,6 +43,7 @@ Route::middleware('auth')->group(function () {
     // Translate Api 
     Route::get('/language', [translateController::class, 'selectLanguage'])->name('selectLanguage');
     Route::post('/store/language', [translateController::class, 'storeLanguage'])->name('storeLanguage');
+    Route::post('/get/userData', [translateController::class, 'getUserData'])->name('getUserData');
     Route::get('/translate', [translateController::class, 'translate'])->name('translate');
 });
 
