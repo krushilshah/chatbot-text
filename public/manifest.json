@@ -1,0 +1,21 @@
+{
+    "name": "ChatScribe",
+    "short_name": "Cscribe",
+    "start_url": "/index.php",
+    "background_color": "#6777ef",
+    "description": "ChatScribe | WeB App",
+    "display": "fullscreen",
+    "theme_color": "#6777ef",
+    "icons": [
+      {
+        "src": "logoaszs.png",
+        "sizes": "503x422",
+        "type": "image/png"
+      },
+      {
+        "src": "chat100.png",
+        "sizes": "553x553",
+        "type": "image/png"
+      }
+    ]
+  }

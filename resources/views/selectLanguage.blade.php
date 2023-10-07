@@ -37,6 +37,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Language</title>
+    <meta name="theme-color" content="black">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
     <link rel="stylesheet" href="{{ asset('style.css') }}">
 </head>
 
@@ -72,12 +74,11 @@
             @if ($errors->has('language'))
                 <div style="color: red ; margin-left:25px; " class="text-danger">{{ $errors->first('language') }}</div>
             @endif
-            <div class="selectContainer">
+            {{-- <div class="selectContainer">
                 <p class="para">The language in which you'd like to receive messages.</p>
-            </div>
+            </div> --}}
             <div class="btnContainer">
                 <button class="btn" type="submit">Proceed</button>
-                
             </div>
         </form>
     </div>

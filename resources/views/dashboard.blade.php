@@ -23,7 +23,8 @@
 <head>
     <meta charset="utf-8">
 
-
+    <meta name="theme-color" content="black">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
@@ -676,7 +677,7 @@
             height: 80vh;
             /* Set a fixed height, adjust as needed */
             /* Add any other styles you need for the "message" container */
-            
+
         }
 
         .chatScribeBlock img {
@@ -685,7 +686,7 @@
             max-height: 100%;
             /* Ensure the image doesn't exceed its container's height */
             opacity: 0.2;
-            
+
         }
     </style>
 </head>
@@ -750,6 +751,7 @@
                     <div class="col-sm-8 col-xs-7 heading-name">
                         <a class="heading-name-meta" id="UserName">
                         </a>
+                        <input type="hidden" name="userId" id="userId">
                         {{-- <span class="heading-online">Online</span> --}}
                     </div>
                     {{-- <div class="col-sm-1 col-xs-1  heading-dot pull-right">
@@ -757,16 +759,14 @@
                     </div> --}}
                 </div>
                 {{-- <div class="mt-3 "></div> --}}
-                <div class="row message " id="messageBlock" style="display: none" id="conversation">
-                    <div class="row mt-2 message-body">
+                <div class="row message" id="messageBlock" style="display: none">
+
+                    {{-- <div class="row mt-2 message-body">
                         <div class="col-sm-12 message-main-receiver">
                             <div class="receiver">
                                 <div class="message-text">
                                     Hi, what are you doing?!
                                 </div>
-                                <span class="message-time pull-right">
-                                    Sun
-                                </span>
                             </div>
                         </div>
                     </div>
@@ -776,12 +776,10 @@
                                 <div class="message-text">
                                     I am doing nothing man!
                                 </div>
-                                <span class="message-time pull-right">
-                                    Sun
-                                </span>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
+
                 </div>
                 {{-- Default Photo  --}}
                 <div class="row chatScribeBlock " id="chatScribeBlock" id="chatScribeBlock">
@@ -790,17 +788,17 @@
 
 
                 <div class="row reply" id="textBlock" style="display: none">
-                    <div class="col-sm-1 col-xs-1 reply-emojis">
+                    {{-- <div class="col-sm-1 col-xs-1 reply-emojis">
                         <i class="fa fa-smile-o fa-2x"></i>
+                    </div> --}}
+                    <div class="col-sm-11 col-xs-9 reply-main">
+                        <textarea class="form-control" placeholder="Type Your Message Here" rows="1" id="messageArea"></textarea>
                     </div>
-                    <div class="col-sm-9 col-xs-9 reply-main">
-                        <textarea class="form-control" rows="1" id="comment"></textarea>
-                    </div>
-                    <div class="col-sm-1 col-xs-1 reply-recording">
+                    {{-- <div class="col-sm-1 col-xs-1 reply-recording">
                         <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
-                    </div>
-                    <div class="col-sm-1 col-xs-1 reply-send">
-                        <i class="fa fa-send fa-2x" aria-hidden="true"></i>
+                    </div> --}}
+                    <div class="col-sm-1 col-xs-1 reply-send" id="reply-send"><i class="fa fa-send fa-2x"
+                            aria-hidden="true"></i>
                     </div>
                 </div>
             </div>
@@ -837,6 +835,7 @@
                 });
             });
 
+            // get User 
             $(".sideBar-body").click(function() {
                 // Get the user ID from the data attribute
                 var userId = $(this).data("user-id");
@@ -854,8 +853,46 @@
                         user_id: userId
                     }, // Pass any data you need to the server
                     success: function(response) {
+                        $("#messageBlock").empty();
+                        
+                        response.messages.forEach((message) => {
+                            if (response.user.id != message.reciver_id) {
+                                console.log(message);
+
+
+                                var newMessageBody = '<div class="row message-body">' +
+                                    '<div class="col-sm-12 message-main-receiver">' +
+                                    '<div class="receiver">' +
+                                    '<div class="message-text">' +
+                                    message.msg_recieve_lang +
+                                    '</div>' +
+                                    '<span class="message-time">' +
+                                    '</span>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
+
+                            } else {
+                                var newMessageBody = '<div class="row message-body">' +
+                                    '<div class="col-sm-12 message-main-sender">' +
+                                    '<div class="sender">' +
+                                    '<div class="message-text">' +
+                                    message.msg_send_lang +
+                                    '</div>'
+                                '<span class="message-time pull-right">' +
+                                '</span>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+                                // Append the new element to the conversation
+                            }
+                            $("#messageBlock").append(newMessageBody);
+                        });
+
+
                         // Handle the response from the server here
                         $('#UserName').text(response.user.name);
+                        $('#userId').val(response.user.id);
                         $("#profileImage").attr("src", response.user.image);
                         $('#profileBlock').show();
                         $('#messageBlock').show();
@@ -869,6 +906,49 @@
                         console.error(error);
                     }
                 });
+            });
+
+            // Send Message
+            $('#reply-send').click(function() {
+                var message = $('#messageArea').val();
+                var newMessageBody = '<div class="row message-body">' +
+                    '<div class="col-sm-12 message-main-sender">' +
+                    '<div class="sender">' +
+                    '<div class="message-text">' +
+                    message +
+                    '</div>'
+                '<span class="message-time pull-right">' +
+                '</span>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+                // Append the new element to the conversation
+                $("#messageBlock").append(newMessageBody);
+                $('#messageArea').val('');
+                if (message != '') {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-Token': '{{ csrf_token() }}',
+                        },
+                        type: "POST", // Use the appropriate HTTP method (GET, POST, etc.)
+                        url: "{{ route('translate') }}", // Replace with the URL of your AJAX endpoint
+                        data: {
+                            user_id: $('#userId').val(),
+                            message: message,
+                        },
+                        success: function(response) {
+                            console.log("Success");
+                            // You can update the UI or perform other actions with the response data.
+                        },
+                        error: function(error) {
+                            // Handle any errors that occur during the AJAX request
+                            console.error("AJAX request error:", error);
+                        }
+                    });
+                } else {
+                    alert("please Enter message first");
+                }
+                // Perform an AJAX request here
             });
         });
     </script>

@@ -49,8 +49,9 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function languages()
-    {
-        return $this->belongsTo(language::class);
-    }
+    public function getLanguage(){
+
+        return $this->hasOne(language::class,'id','language');
+
+    } 
 }

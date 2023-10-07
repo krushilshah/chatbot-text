@@ -44,7 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/language', [translateController::class, 'selectLanguage'])->name('selectLanguage');
     Route::post('/store/language', [translateController::class, 'storeLanguage'])->name('storeLanguage');
     Route::post('/get/userData', [translateController::class, 'getUserData'])->name('getUserData');
-    Route::get('/translate', [translateController::class, 'translate'])->name('translate');
+    Route::post('/translate', [translateController::class, 'translate'])->name('translate');
 });
 
 require __DIR__ . '/auth.php';

@@ -6,7 +6,8 @@
 
     <!--====== Title ======-->
     <title>Welcome | Chat-Scribe</title>
-
+    <meta name="theme-color" content="black">
+    <link rel="manifest" href="{{asset('manifest.json')}}">
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
